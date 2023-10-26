@@ -1,24 +1,24 @@
-class Persona {
-  String nombre;
-  String apellido;
-  String telefono;
+class User {
+  String name;
+  String lastName;
+  String phoneNumber;
   String dni;
-  int edad;
-  String correo;
-  String genero;
+  int age;
+  String email;
+  String gender;
 
-  Persona({
-    required this.nombre,
-    required this.apellido,
-    required this.telefono,
+  User({
+    required this.name,
+    required this.lastName,
+    required this.phoneNumber,
     required this.dni,
-    required this.edad,
-    required this.correo,
-    required this.genero,
+    required this.age,
+    required this.email,
+    required this.gender,
   });
 
   @override
   String toString() {
-    return 'Nombre: $nombre\nApellido: $apellido\nTelefono: $telefono\nDNI: $dni\nEdad: $edad\nCorreo: $correo\nGenero: $genero';
+    return 'Name: $name\nLastName: $lastName\nPhoneNumber: $phoneNumber\nDNI: $dni\nAge: $age\nEmail: $email\nGender: $gender';
   }
 }

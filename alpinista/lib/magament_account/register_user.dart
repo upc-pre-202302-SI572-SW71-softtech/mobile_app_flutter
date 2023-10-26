@@ -21,14 +21,14 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
 
   void _registrar() {
     if (_formKey.currentState!.validate()) {
-      final persona = Persona(
-        nombre: _nombreController.text,
-        apellido: _apellidoController.text,
-        telefono: _telefonoController.text,
+      final persona = User(
+        name: _nombreController.text,
+        lastName: _apellidoController.text,
+        phoneNumber: _telefonoController.text,
         dni: _dniController.text,
-        edad: int.parse(_edadController.text),
-        correo: _correoController.text,
-        genero: _isMasculino ? 'Masculino' : 'Femenino',
+        age: int.parse(_edadController.text),
+        email: _correoController.text,
+        gender: _isMasculino ? 'Masculino' : 'Femenino',
       );
       print(persona);
 
