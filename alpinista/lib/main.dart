@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
+import 'magament_account/register_user.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
+      home: RegistrarUsuario(),
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   @override
