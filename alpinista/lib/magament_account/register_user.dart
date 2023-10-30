@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../main.dart';
 import '../models/Persona.dart';
 
@@ -16,6 +15,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
   final _dniController = TextEditingController();
   final _edadController = TextEditingController();
   final _correoController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _isMasculino = false;
   bool _isFemenino = false;
 
@@ -29,13 +29,16 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
         age: int.parse(_edadController.text),
         email: _correoController.text,
         gender: _isMasculino ? 'Masculino' : 'Femenino',
+        password: _passwordController.text,
       );
       print(persona);
 
-      // Navegar a la ventana principal
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => MyHomePage(),
-      ));
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(),
+        ),
+            (Route<dynamic> route) => false,
+      );
     }
   }
 
@@ -50,7 +53,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
+          child: ListView(
             children: [
               TextFormField(
                 controller: _nombreController,
@@ -111,6 +114,17 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   }
                   return null;
                 },
+              ),
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: 'Contraseña'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Este campo es obligatorio';
+                  }
+                  return null;
+                },
+                obscureText: true,
               ),
               Row(
                 children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'magament_account/login.dart';
 import 'magament_account/register_user.dart';
 
 void main() => runApp(MyApp());
@@ -8,10 +9,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: RegistrarUsuario(),
+      home: Login(),
     );
   }
 }
+
 
 
 class MyHomePage extends StatefulWidget {

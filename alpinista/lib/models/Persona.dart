@@ -6,6 +6,7 @@ class User {
   int age;
   String email;
   String gender;
+  String password;
 
   User({
     required this.name,
@@ -15,10 +16,11 @@ class User {
     required this.age,
     required this.email,
     required this.gender,
+    required this.password,
   });
 
   @override
   String toString() {
-    return 'Name: $name\nLastName: $lastName\nPhoneNumber: $phoneNumber\nDNI: $dni\nAge: $age\nEmail: $email\nGender: $gender';
+    return 'Name: $name\nLastName: $lastName\nPhoneNumber: $phoneNumber\nDNI: $dni\nAge: $age\nEmail: $email\nGender: $gender\nPassword: $password';
   }
 }
