@@ -1,6 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:fl_chart/fl_chart.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,7 +20,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 2; // Cambiado a 2 para que muestre la pantalla de Clima por defecto
+  int _currentIndex = 2;
 
   final List<Widget> _screens = [
     SaludScreen(),
@@ -88,14 +89,12 @@ class _ClimaScreenState extends State<ClimaScreen> {
   final apiKey = 'c5df7aa6bc367505265274d82813805c';
   final coordinates = [
     {'lat': -13.5170887, 'lon': -71.9785356},
-    {'lat': -12.068098 , 'lon': -75.2100953 },
+    {'lat': -12.068098, 'lon': -75.2100953},
     {'lat': -14.0764407, 'lon': -72.7210075},
-    {'lat': -13.1604269 , 'lon':-74.2256973 },
-    {'lat': -16.3988667, 'lon':-71.5369607},
-    {'lat': -11.5985493, 'lon':-76.1931885},
-    {'lat': -11.4199882, 'lon':-75.6877142, },
-
-
+    {'lat': -13.1604269, 'lon': -74.2256973},
+    {'lat': -16.3988667, 'lon': -71.5369607},
+    {'lat': -11.5985493, 'lon': -76.1931885},
+    {'lat': -11.4199882, 'lon': -75.6877142},
   ];
 
   @override
@@ -110,21 +109,23 @@ class _ClimaScreenState extends State<ClimaScreen> {
       final lon = coord['lon'];
 
       final weatherResponse = await http.get(
-        Uri.parse('https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey'),
+        Uri.parse(
+            'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey'),
       );
 
       if (weatherResponse.statusCode == 200) {
-        final Map<String, dynamic> weatherData = json.decode(weatherResponse.body);
+        final Map<String, dynamic> weatherData =
+        json.decode(weatherResponse.body);
 
         final String cityName = weatherData['name'];
         final String description = weatherData['weather'][0]['description'];
-        final double temperature = (weatherData['main']['temp'] - 273.15); // Convert to Celsius
+        final double temperature = (weatherData['main']['temp'] - 273.15);
 
         setState(() {
-          cityWeatherData.add(CityWeatherData(cityName, description, temperature));
+          cityWeatherData.add(CityWeatherData(cityName, description, temperature,
+              weatherData, lat!, lon!));
         });
       } else {
-        // Handle errors
         print('Error al obtener datos climáticos para lat=$lat, lon=$lon');
       }
     }
@@ -138,16 +139,32 @@ class _ClimaScreenState extends State<ClimaScreen> {
       itemCount: cityWeatherData.length,
       itemBuilder: (context, index) {
         final weatherData = cityWeatherData[index];
-        return Card(
-          child: ListTile(
-            title: Text(weatherData.name),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Clima: ${weatherData.description}'),
-                Text('Temperatura: ${weatherData.temperature.toStringAsFixed(1)}°C'),
-              ],
-            ),
+        return WeatherCard(
+          weatherData: weatherData,
+          onPressed: () {
+            _showDetailsModal(context, weatherData);
+          },
+        );
+      },
+    );
+  }
+
+  void _showDetailsModal(BuildContext context, CityWeatherData weatherData) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Temperatura Mínima: ${weatherData.minTemperature.toStringAsFixed(1)}°C'),
+              Text('Temperatura Máxima: ${weatherData.maxTemperature.toStringAsFixed(1)}°C'),
+              Text('Humedad: ${weatherData.humidity}%'),
+              Text('Ubicación: Lat ${weatherData.lat}, Lon ${weatherData.lon}'),
+              // Puedes agregar más detalles aquí
+              SizedBox(height: 16),
+            ],
           ),
         );
       },
@@ -159,6 +176,96 @@ class CityWeatherData {
   final String name;
   final String description;
   final double temperature;
+  final double minTemperature;
+  final double maxTemperature;
+  final int humidity;
+  final double lat;
+  final double lon;
 
-  CityWeatherData(this.name, this.description, this.temperature);
+  CityWeatherData(this.name, this.description, this.temperature,
+      Map<String, dynamic> weatherData, this.lat, this.lon)
+      : minTemperature = weatherData['main']['temp_min'] - 273.15,
+        maxTemperature = weatherData['main']['temp_max'] - 273.15,
+        humidity = weatherData['main']['humidity'];
+}
+
+class WeatherCard extends StatelessWidget {
+  final CityWeatherData weatherData;
+  final VoidCallback onPressed;
+
+  WeatherCard({required this.weatherData, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(weatherData.name),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Clima: ${weatherData.description}'),
+                Text('Temperatura: ${weatherData.temperature.toStringAsFixed(1)}°C'),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              PopupMenuButton(
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem(
+                      child: Text('Ver Detalles'),
+                      value: 'details',
+                    ),
+                  ];
+                },
+                onSelected: (value) {
+                  if (value == 'details') {
+                    onPressed();
+                  }
+                },
+                icon: Icon(Icons.more_vert),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 200,
+            child: LineChart(
+              LineChartData(
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: [
+                      FlSpot(0, weatherData.maxTemperature),
+                      FlSpot(1, weatherData.minTemperature+7),
+                      FlSpot(2, weatherData.minTemperature+5),
+                      FlSpot(3, weatherData.minTemperature),
+                    ],
+                    isCurved: true,
+                    colors: [Colors.blue],
+                    dotData: FlDotData(show: false),
+                    belowBarData: BarAreaData(show: false),
+                  ),
+                ],
+                titlesData: FlTitlesData(show: false),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border.all(
+                    color: const Color(0xff37434d),
+                    width: 1,
+                  ),
+                ),
+                minX: 0,
+                maxX: 3,
+                minY: 0,
+                maxY: 30,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
