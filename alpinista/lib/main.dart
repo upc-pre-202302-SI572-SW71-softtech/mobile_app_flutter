@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
-
+import 'package:flare_flutter/flare_actor.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'magament_account/login.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'magament_account/register_user.dart';
 
 void main() => runApp(MyApp());
@@ -37,7 +39,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Alpinista"),
+        title: Text(
+          "Alpinista",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.black,
       ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -61,6 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
             _currentIndex = index;
           });
         },
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
       ),
     );
   }
@@ -167,7 +176,7 @@ class _ClimaScreenState extends State<ClimaScreen> {
               Text('Temperatura Máxima: ${weatherData.maxTemperature.toStringAsFixed(1)}°C'),
               Text('Humedad: ${weatherData.humidity}%'),
               Text('Ubicación: Lat ${weatherData.lat}, Lon ${weatherData.lon}'),
-              // Puedes agregar más detalles aquí
+
               SizedBox(height: 16),
             ],
           ),
@@ -203,73 +212,94 @@ class WeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(weatherData.name),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      elevation: 8,
+      child: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              title: Text(
+                weatherData.name,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Clima: ${weatherData.description}'),
+                  Text('Temperatura: ${weatherData.temperature.toStringAsFixed(1)}°C'),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text('Clima: ${weatherData.description}'),
-                Text('Temperatura: ${weatherData.temperature.toStringAsFixed(1)}°C'),
+                PopupMenuButton(
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(
+                        child: Text('Ver Detalles'),
+                        value: 'details',
+                      ),
+                    ];
+                  },
+                  onSelected: (value) {
+                    if (value == 'details') {
+                      onPressed();
+                    }
+                  },
+                  icon: Icon(Icons.more_vert),
+                ),
               ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              PopupMenuButton(
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem(
-                      child: Text('Ver Detalles'),
-                      value: 'details',
+            SizedBox(
+              height: 200,
+              child: Stack(
+                children: [
+                  Image.asset(
+                    'assets/cloudy.gif',
+                    fit: BoxFit.cover,
+                    width: 45,
+                    height: 45,
+                  ),
+                  LineChart(
+                    LineChartData(
+                      lineBarsData: [
+                        LineChartBarData(
+                          spots: [
+                            FlSpot(0, weatherData.maxTemperature),
+                            FlSpot(1, weatherData.minTemperature+7),
+                            FlSpot(2, weatherData.minTemperature+5),
+                            FlSpot(3, weatherData.minTemperature),
+                          ],
+                          isCurved: true,
+                          colors: [Colors.black38],
+                          dotData: FlDotData(show: false),
+                          belowBarData: BarAreaData(show: false),
+                        ),
+                      ],
+                      titlesData: FlTitlesData(show: false),
+                      borderData: FlBorderData(
+                        show: true,
+                        border: Border.all(
+                          color: const Color(0xff37434d),
+                          width: 1,
+                        ),
+                      ),
+                      minX: 0,
+                      maxX: 3,
+                      minY: 0,
+                      maxY: 30,
                     ),
-                  ];
-                },
-                onSelected: (value) {
-                  if (value == 'details') {
-                    onPressed();
-                  }
-                },
-                icon: Icon(Icons.more_vert),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 200,
-            child: LineChart(
-              LineChartData(
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: [
-                      FlSpot(0, weatherData.maxTemperature),
-                      FlSpot(1, weatherData.minTemperature+7),
-                      FlSpot(2, weatherData.minTemperature+5),
-                      FlSpot(3, weatherData.minTemperature),
-                    ],
-                    isCurved: true,
-                    colors: [Colors.blue],
-                    dotData: FlDotData(show: false),
-                    belowBarData: BarAreaData(show: false),
                   ),
                 ],
-                titlesData: FlTitlesData(show: false),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(
-                    color: const Color(0xff37434d),
-                    width: 1,
-                  ),
-                ),
-                minX: 0,
-                maxX: 3,
-                minY: 0,
-                maxY: 30,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

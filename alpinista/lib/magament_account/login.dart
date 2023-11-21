@@ -46,15 +46,26 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ClipOval(
-                    child: Image.network(
-                      'https://go2climb-fundamentos.netlify.app/assets/images/logoSecundari.jpg',
-                      width: 180,
-                      height: 180,
-                      fit: BoxFit.cover,
+                  TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: Duration(seconds: 1),
+                    builder: (context, value, child) {
+                      return Transform.scale(
+                        scale: value,
+                        child: child,
+                      );
+                    },
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/logo.png',
+                        width: 180,
+                        height: 180,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
+                  // Aplicar efecto de hover a los campos de texto
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -104,18 +115,18 @@ class _LoginState extends State<Login> {
                     obscureText: true,
                   ),
                   SizedBox(height: 20),
+                  // Aplicar efecto de hover al botón de inicio de sesión
                   ElevatedButton(
                     onPressed: _iniciarSesion,
-                    child: Text('Iniciar Sesión'),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue.shade700,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
+                      padding: EdgeInsets.all(20.0),
+                    ),
+                    child: Text(
+                      'Iniciar Sesión',
+                      style: TextStyle(fontSize: 18.0),
                     ),
                   ),
                   SizedBox(height: 10),
-                  // Cambio del botón "Crear Cuenta" a texto subrayado
                   InkWell(
                     onTap: _crearCuenta,
                     child: Text(

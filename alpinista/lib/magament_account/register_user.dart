@@ -47,12 +47,12 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registrar Usuario'),
+        title: Text('Registro de Usuario'),
       ),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
           child: ListView(
             children: [
               TextFormField(
@@ -65,6 +65,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   return null;
                 },
               ),
+              SizedBox(height: 12.0),
               TextFormField(
                 controller: _apellidoController,
                 decoration: InputDecoration(labelText: 'Apellido'),
@@ -75,9 +76,10 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   return null;
                 },
               ),
+              SizedBox(height: 12.0),
               TextFormField(
                 controller: _telefonoController,
-                decoration: InputDecoration(labelText: 'Telefono'),
+                decoration: InputDecoration(labelText: 'Teléfono'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Este campo es obligatorio';
@@ -85,6 +87,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   return null;
                 },
               ),
+              SizedBox(height: 12.0),
               TextFormField(
                 controller: _dniController,
                 decoration: InputDecoration(labelText: 'DNI'),
@@ -95,6 +98,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   return null;
                 },
               ),
+              SizedBox(height: 12.0),
               TextFormField(
                 controller: _edadController,
                 decoration: InputDecoration(labelText: 'Edad'),
@@ -105,6 +109,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   return null;
                 },
               ),
+              SizedBox(height: 12.0),
               TextFormField(
                 controller: _correoController,
                 decoration: InputDecoration(labelText: 'Correo'),
@@ -115,6 +120,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   return null;
                 },
               ),
+              SizedBox(height: 12.0),
               TextFormField(
                 controller: _passwordController,
                 decoration: InputDecoration(labelText: 'Contraseña'),
@@ -126,6 +132,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                 },
                 obscureText: true,
               ),
+              SizedBox(height: 12.0),
               Row(
                 children: [
                   Checkbox(
@@ -138,6 +145,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                     },
                   ),
                   Text('Masculino'),
+                  SizedBox(width: 16.0),
                   Checkbox(
                     value: _isFemenino,
                     onChanged: (value) {
@@ -150,9 +158,19 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   Text('Femenino'),
                 ],
               ),
-              ElevatedButton(
-                onPressed: _registrar,
-                child: Text('Registrar'),
+              Container(
+                height: 60.0, // Ajusta la altura del botón según tus preferencias
+                margin: EdgeInsets.only(top: 20.0), // Espacio entre el último campo de texto y el botón
+                child: ElevatedButton(
+                  onPressed: _registrar,
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(20.0), // Ajusta el padding para hacer el botón más grande
+                  ),
+                  child: Text(
+                    'Registrar',
+                    style: TextStyle(fontSize: 18.0), // Tamaño del texto del botón
+                  ),
+                ),
               ),
             ],
           ),
