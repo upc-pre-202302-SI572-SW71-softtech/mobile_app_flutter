@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animator/animation/animation_preferences.dart';
-import 'package:flutter_animator/animation/animator_play_states.dart';
 import 'package:flutter_animator/widgets/attention_seekers/rubber_band.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'magament_account/login.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'magament_account/register_user.dart';
-import '../models/Persona.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'dart:async';
@@ -29,6 +23,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,7 +36,6 @@ class MyApp extends StatelessWidget {
 
 
 class MyHomePage extends StatefulWidget {
-  @override
   final String userName;
 
   MyHomePage({required this.userName});
