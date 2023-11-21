@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animator/animation/animation_preferences.dart';
+import 'package:flutter_animator/animation/animator_play_states.dart';
+import 'package:flutter_animator/widgets/attention_seekers/rubber_band.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
@@ -9,6 +12,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'magament_account/register_user.dart';
 import '../models/Persona.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_animator/flutter_animator.dart';
+import 'dart:async';
+import 'dart:math';
+
+
+
+import 'models/route.dart';
 
 
 void main() async {
@@ -94,20 +104,297 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class SaludScreen extends StatelessWidget {
+class SaludScreen extends StatefulWidget {
+  @override
+  _SaludScreenState createState() => _SaludScreenState();
+}
+
+class _SaludScreenState extends State<SaludScreen> {
+  late double pulsoCardiaco = 70; // Inicializar pulsoCardiaco
+
+  double presionArterial = 120;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Iniciar la medición del pulso cada 5 segundos
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      // Generar valores aleatorios para simular la medición del pulso
+      setState(() {
+        pulsoCardiaco = Random().nextInt(60) + 70; // Rango entre 70 y 130
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("Vista de Salud"),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 20),
+
+          // Barra de pulso cardíaco
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Pulso Cardiaco:'),
+                SizedBox(width: 10),
+                PulseBar(pulsoCardiaco),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+
+          // Datos cardiacos
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text('Datos Cardiacos'),
+                  SizedBox(height: 10),
+                  Text('Pulso: ${pulsoCardiaco.round()} bpm'),
+                  Text('Presión Arterial: ${presionArterial.round()} mmHg'),
+                ],
+              ),
+            ),
+          ),
+
+          // Animación de corazón latiendo
+          SizedBox(height: 20),
+          HeartBeatAnimation(),
+
+          SizedBox(height: 20),
+        ],
+      ),
     );
   }
 }
 
-class RutasScreen extends StatelessWidget {
+class PulseBar extends StatelessWidget {
+  final double pulso;
+
+  PulseBar(this.pulso);
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text("Vista de Rutas"),
+    return Container(
+      width: 200, // Establecer un ancho explícito
+      child: LinearProgressIndicator(
+        value: pulso / 100,
+        color: Colors.red,
+        backgroundColor: Colors.grey,
+      ),
+    );
+  }
+}
+
+class HeartBeatAnimation extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RubberBand(
+      child: Icon(
+        Icons.favorite,
+        color: Colors.red,
+        size: 50,
+      ),
+    );
+  }
+}
+
+
+
+class RouteCard extends StatefulWidget {
+  final RouteData route;
+
+  RouteCard({required this.route});
+
+  @override
+  _RouteCardState createState() => _RouteCardState();
+}
+
+class _RouteCardState extends State<RouteCard> {
+  bool isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        // Manejar el evento onTap aquí
+        print('Card Tapped!');
+        _showRouteDetails(context);
+      },
+      onHover: (hovering) {
+        setState(() {
+          isHovered = hovering;
+        });
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 2),
+            ),
+          ],
+          color: isHovered ? Colors.blue : Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ListTile(
+              title: Text(
+                widget.route.name,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                widget.route.description,
+                style: TextStyle(fontSize: 14),
+              ),
+              leading: widget.route.photoUrl != null
+                  ? Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(widget.route.photoUrl!),
+                  ),
+                ),
+              )
+                  : SizedBox.shrink(),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.star, color: Colors.yellow),
+                  Text(widget.route.score),
+                ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Manejar el evento del botón "Ver Ruta"
+                _showRouteDetails(context);
+              },
+              child: Text('Ver Ruta'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRouteDetails(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Nombre: ${widget.route.name}'),
+              Text('Descripción: ${widget.route.description}'),
+              Text('Estrellas: ${widget.route.score}'),
+              SizedBox(height: 16),
+              // Aquí puedes agregar la foto panorámica
+              widget.route.photoUrl != null
+                  ? Image.network(
+                widget.route.photoUrl!,
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              )
+                  : SizedBox.shrink(),
+              SizedBox(height: 16),
+
+    Container(
+    height: 200,
+    child: GoogleMap(
+    initialCameraPosition: CameraPosition(
+    target: LatLng(0, 0),
+    zoom: 15,
+    ),
+    markers: {
+    Marker(
+    markerId: MarkerId('ruta'),
+    position: LatLng(0, 0),
+    infoWindow: InfoWindow(
+    title: 'Ruta',
+    snippet: 'Ubicación de la ruta',
+    ),
+    ),
+    },
+    ),
+    ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+
+
+class RutasScreen extends StatelessWidget {
+  Future<List<RouteData>> fetchRoutes() async {
+    final response = await http.get(Uri.parse('https://backendiot.azurewebsites.net/api/routes'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      return data.map((route) {
+        return RouteData(
+          name: route['name'],
+          photoUrl: route['photourl'],
+          description: route['description'],
+          score: route['score'],
+        );
+      }).toList();
+    } else {
+      throw Exception('Error al cargar las rutas');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<RouteData>>(
+      future: fetchRoutes(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No se encontraron rutas.'));
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data?.length ?? 0,
+            itemBuilder: (context, index) {
+              final route = snapshot.data?[index];
+              if (route != null) {
+                return RouteCard(route: route);
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          );
+        }
+      },
     );
   }
 }
