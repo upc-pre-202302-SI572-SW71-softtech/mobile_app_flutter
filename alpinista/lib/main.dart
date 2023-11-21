@@ -7,8 +7,16 @@ import 'package:fl_chart/fl_chart.dart';
 import 'magament_account/login.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'magament_account/register_user.dart';
+import '../models/Persona.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() => runApp(MyApp());
+
+void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('usuarios');
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -23,6 +31,9 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   @override
+  final String userName;
+
+  MyHomePage({required this.userName});
   _MyHomePageState createState() => _MyHomePageState();
 }
 
@@ -39,11 +50,19 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Alpinista",
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text('Bienvenido ${widget.userName}'),
         backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Login()),
+              );
+            },
+          ),
+        ],
       ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

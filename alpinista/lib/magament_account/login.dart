@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/Persona.dart';
 import 'register_user.dart';
 import '../main.dart';
 
@@ -14,13 +15,40 @@ class _LoginState extends State<Login> {
 
   void _iniciarSesion() {
     if (_formKey.currentState!.validate()) {
-      print('Email: ${_emailController.text}');
-      print('Password: ${_passwordController.text}');
+      final email = _emailController.text;
+      final password = _passwordController.text;
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => MyHomePage(),
-      ));
+      if (User.authenticate(email, password) != null) {
+        User? loggedInUser = User.authenticate(email, password);
+        print('Inicio de sesión exitoso para ${loggedInUser?.getFullName()}');
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => MyHomePage(userName: loggedInUser!.getFullName()),
+        ));
+      } else {
+        print('Credenciales incorrectas');
+        _mostrarDialogo(context, 'Contraseña incorrecta, vuelva a intentarlo');
+      }
     }
+  }
+
+  void _mostrarDialogo(BuildContext context, String mensaje) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error de inicio de sesión'),
+          content: Text(mensaje),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _crearCuenta() {
@@ -34,7 +62,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Iniciar Sesión'),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.black54,
       ),
       body: Container(
         color: Colors.blue.shade100,

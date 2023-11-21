@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../main.dart';
 import '../models/Persona.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 
 class RegistrarUsuario extends StatefulWidget {
   @override
@@ -19,7 +21,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
   bool _isMasculino = false;
   bool _isFemenino = false;
 
-  void _registrar() {
+  void _registrar() async {
     if (_formKey.currentState!.validate()) {
       final persona = User(
         name: _nombreController.text,
@@ -31,11 +33,14 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
         gender: _isMasculino ? 'Masculino' : 'Femenino',
         password: _passwordController.text,
       );
-      print(persona);
+
+
+      final box = await Hive.openBox('usuarios');
+      box.add(persona.toMap());
 
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => MyHomePage(),
+          builder: (context) => MyHomePage(userName: persona.getFullName()),
         ),
             (Route<dynamic> route) => false,
       );
@@ -158,17 +163,22 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   Text('Femenino'),
                 ],
               ),
-              Container(
-                height: 60.0, // Ajusta la altura del botón según tus preferencias
-                margin: EdgeInsets.only(top: 20.0), // Espacio entre el último campo de texto y el botón
-                child: ElevatedButton(
-                  onPressed: _registrar,
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(20.0), // Ajusta el padding para hacer el botón más grande
-                  ),
-                  child: Text(
-                    'Registrar',
-                    style: TextStyle(fontSize: 18.0), // Tamaño del texto del botón
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  height: 80.0,
+                  margin: EdgeInsets.all(20.0),
+                  child: ElevatedButton(
+                    onPressed: _registrar,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all(20.0),
+                    ),
+                    child: Text(
+                      'Registrar',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
                   ),
                 ),
               ),
