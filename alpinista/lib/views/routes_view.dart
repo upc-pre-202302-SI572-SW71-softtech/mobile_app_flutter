@@ -73,7 +73,7 @@ class _RouteCardState extends State<RouteCard> {
                 ),
               ),
               child: Text(
-                'Ver Ruta',
+                'Route',
                 style: TextStyle(fontSize: 18),
               ),
             ),
@@ -142,7 +142,7 @@ class _RouteCardState extends State<RouteCard> {
               shrinkWrap: true,
               children: [
                 Text(
-                  'Nombre: ${widget.route.name}',
+                  'Name: ${widget.route.name}',
                   style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 SizedBox(height: 8),

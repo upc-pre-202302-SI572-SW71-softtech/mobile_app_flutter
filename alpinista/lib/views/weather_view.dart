@@ -29,14 +29,14 @@ class _ClimaScreenState extends State<ClimaScreen> {
         deviceDataList = data.map((item) => DeviceData.fromJson(item)).toList();
       });
     } else {
-      print('Error al obtener datos de la API');
+      print('Error getting data from API');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return deviceDataList.isEmpty
-        ? Center(child: Text('No se encontraron datos de dispositivos.'))
+        ? Center(child: Text('No device data found.'))
         : Scaffold(
       body: Stack(
         children: [
@@ -95,14 +95,14 @@ class DeviceCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Temperatura: ${deviceData.temperature.toStringAsFixed(1)}°C',
+                    'Temperature: ${deviceData.temperature.toStringAsFixed(1)}°C',
                     style: TextStyle(
                       color: Colors.black87,
                       fontSize: 16,
                     ),
                   ),
                   Text(
-                    'Humedad: ${deviceData.humidity}%',
+                    'Humidity: ${deviceData.humidity}%',
                     style: TextStyle(
                       color: Colors.black87,
                       fontSize: 16,
@@ -121,7 +121,6 @@ class DeviceCard extends StatelessWidget {
                         LineChartBarData(
                           spots: [
                             FlSpot(0, deviceData.temperature),
-                            // Ajusta estos puntos según tus necesidades
                             FlSpot(1, deviceData.temperature + 5),
                             FlSpot(2, deviceData.temperature - 3),
                             FlSpot(3, deviceData.temperature + 2),
@@ -147,7 +146,7 @@ class DeviceCard extends StatelessWidget {
                       minX: 0,
                       maxX: 7,
                       minY: deviceData.temperature - 5,
-                      maxY: deviceData.temperature + 5,
+                      maxY: deviceData.temperature + 6,
                     ),
                   ),
                 ],

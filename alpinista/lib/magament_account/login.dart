@@ -26,7 +26,7 @@ class _LoginState extends State<Login> {
         ));
       } else {
         print('Credenciales incorrectas');
-        _mostrarDialogo(context, 'Contraseña incorrecta, vuelva a intentarlo');
+        _mostrarDialogo(context, 'Incorrect password, please try again');
       }
     }
   }
@@ -53,7 +53,7 @@ class _LoginState extends State<Login> {
 
   void _crearCuenta() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => RegistrarUsuario(),
+      builder: (context) => RegisterUser(),
     ));
   }
 
@@ -61,7 +61,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Iniciar Sesión'),
+        title: Text('Log in'),
         backgroundColor: Colors.black54,
       ),
       body: Container(
@@ -112,7 +112,7 @@ class _LoginState extends State<Login> {
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Este campo es obligatorio';
+                        return 'This field is required';
                       }
                       return null;
                     },
@@ -121,7 +121,7 @@ class _LoginState extends State<Login> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      labelText: 'Contraseña',
+                      labelText: 'Password',
                       prefixIcon: Icon(Icons.lock_outline),
                       filled: true,
                       fillColor: Colors.white,
@@ -136,7 +136,7 @@ class _LoginState extends State<Login> {
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Este campo es obligatorio';
+                        return 'This field is required';
                       }
                       return null;
                     },
@@ -150,7 +150,7 @@ class _LoginState extends State<Login> {
                       padding: EdgeInsets.all(20.0),
                     ),
                     child: Text(
-                      'Iniciar Sesión',
+                      'Log in',
                       style: TextStyle(fontSize: 18.0),
                     ),
                   ),
@@ -158,7 +158,7 @@ class _LoginState extends State<Login> {
                   InkWell(
                     onTap: _crearCuenta,
                     child: Text(
-                      'Crear Cuenta',
+                      'Create Account',
                       style: TextStyle(
                         color: Colors.black,
                         decoration: TextDecoration.underline,

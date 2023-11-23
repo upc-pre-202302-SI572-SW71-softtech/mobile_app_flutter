@@ -145,7 +145,7 @@ class _SaludScreenState extends State<SaludScreen> with TickerProviderStateMixin
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Pulso Cardiaco:',
+                  'Heartbeat:',
                   style: TextStyle(
                     color: Colors.grey[800],
                     fontSize: 18,
@@ -167,7 +167,7 @@ class _SaludScreenState extends State<SaludScreen> with TickerProviderStateMixin
               child: Column(
                 children: [
                   Text(
-                    'Datos Cardiacos',
+                    'Cardiac Data',
                     style: TextStyle(
                       color: Colors.red,
                       fontSize: 20,
@@ -176,14 +176,14 @@ class _SaludScreenState extends State<SaludScreen> with TickerProviderStateMixin
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Pulso: ${pulsoCardiaco.round()} bpm',
+                    'Pulse: ${pulsoCardiaco.round()} bpm',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                     ),
                   ),
                   Text(
-                    'Presión Arterial: ${presionArterial.round()} mmHg',
+                    'Blood pressure: ${presionArterial.round()} mmHg',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -210,7 +210,7 @@ class _SaludScreenState extends State<SaludScreen> with TickerProviderStateMixin
                 child: Column(
                   children: [
                     Text(
-                      'Historial de Pulso Cardiaco',
+                      'Heart Rate History',
                       style: TextStyle(
                         color: Colors.red,
                         fontSize: 20,

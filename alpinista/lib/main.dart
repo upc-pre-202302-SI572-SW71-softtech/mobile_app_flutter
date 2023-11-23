@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'magament_account/login.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'views/salud.dart';
-import 'views/rutas.dart';
-import 'views/clima.dart';
+import 'views/health_view.dart';
+import 'views/routes_view.dart';
+import 'views/weather_view.dart';
 
 import 'models/route.dart';
 
@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bienvenido ${widget.userName}'),
+        title: Text('Welcome ${widget.userName}'),
         backgroundColor: Colors.black,
         actions: [
           IconButton(
@@ -70,15 +70,15 @@ class _MyHomePageState extends State<MyHomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
-            label: "Salud",
+            label: "Health",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
-            label: "Rutas",
+            label: "Routes",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.cloud),
-            label: "Clima",
+            label: "Weather",
           ),
         ],
         currentIndex: _currentIndex,
