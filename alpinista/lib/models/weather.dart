@@ -1,7 +1,7 @@
 class DeviceData {
   final int id;
   final double temperature;
-  final int humidity;
+  final double humidity;
   final String position;
 
   DeviceData({
@@ -15,7 +15,7 @@ class DeviceData {
     return DeviceData(
       id: json['ID'] ?? 0,
       temperature: _parseDouble(json['temperature']) ?? 0.0,
-      humidity: _parseInt(json['humidity']) ?? 0,
+      humidity: _parseDouble(json['humidity']) ?? 0,
       position: json['position'] ?? '',
     );
   }
