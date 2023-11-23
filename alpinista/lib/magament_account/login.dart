@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/Persona.dart';
 import 'register_user.dart';
 import '../main.dart';
 
@@ -14,18 +15,45 @@ class _LoginState extends State<Login> {
 
   void _iniciarSesion() {
     if (_formKey.currentState!.validate()) {
-      print('Email: ${_emailController.text}');
-      print('Password: ${_passwordController.text}');
+      final email = _emailController.text;
+      final password = _passwordController.text;
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => MyHomePage(),
-      ));
+      if (User.authenticate(email, password) != null) {
+        User? loggedInUser = User.authenticate(email, password);
+        print('Inicio de sesión exitoso para ${loggedInUser?.getFullName()}');
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => MyHomePage(userName: loggedInUser!.getFullName()),
+        ));
+      } else {
+        print('Credenciales incorrectas');
+        _mostrarDialogo(context, 'Incorrect password, please try again');
+      }
     }
+  }
+
+  void _mostrarDialogo(BuildContext context, String mensaje) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error de inicio de sesión'),
+          content: Text(mensaje),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _crearCuenta() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => RegistrarUsuario(),
+      builder: (context) => RegisterUser(),
     ));
   }
 
@@ -33,8 +61,8 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Iniciar Sesión'),
-        backgroundColor: Colors.blue.shade700,
+        title: Text('Log in'),
+        backgroundColor: Colors.black54,
       ),
       body: Container(
         color: Colors.blue.shade100,
@@ -46,15 +74,26 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ClipOval(
-                    child: Image.network(
-                      'https://go2climb-fundamentos.netlify.app/assets/images/logoSecundari.jpg',
-                      width: 180,
-                      height: 180,
-                      fit: BoxFit.cover,
+                  TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: Duration(seconds: 1),
+                    builder: (context, value, child) {
+                      return Transform.scale(
+                        scale: value,
+                        child: child,
+                      );
+                    },
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/logo.png',
+                        width: 180,
+                        height: 180,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
+                  // Aplicar efecto de hover a los campos de texto
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -73,7 +112,7 @@ class _LoginState extends State<Login> {
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Este campo es obligatorio';
+                        return 'This field is required';
                       }
                       return null;
                     },
@@ -82,7 +121,7 @@ class _LoginState extends State<Login> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      labelText: 'Contraseña',
+                      labelText: 'Password',
                       prefixIcon: Icon(Icons.lock_outline),
                       filled: true,
                       fillColor: Colors.white,
@@ -97,29 +136,29 @@ class _LoginState extends State<Login> {
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Este campo es obligatorio';
+                        return 'This field is required';
                       }
                       return null;
                     },
                     obscureText: true,
                   ),
                   SizedBox(height: 20),
+                  // Aplicar efecto de hover al botón de inicio de sesión
                   ElevatedButton(
                     onPressed: _iniciarSesion,
-                    child: Text('Iniciar Sesión'),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue.shade700,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
+                      padding: EdgeInsets.all(20.0),
+                    ),
+                    child: Text(
+                      'Log in',
+                      style: TextStyle(fontSize: 18.0),
                     ),
                   ),
                   SizedBox(height: 10),
-                  // Cambio del botón "Crear Cuenta" a texto subrayado
                   InkWell(
                     onTap: _crearCuenta,
                     child: Text(
-                      'Crear Cuenta',
+                      'Create Account',
                       style: TextStyle(
                         color: Colors.black,
                         decoration: TextDecoration.underline,
