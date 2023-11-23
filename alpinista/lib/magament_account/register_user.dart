@@ -3,7 +3,6 @@ import '../main.dart';
 import '../models/Persona.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-
 class RegistrarUsuario extends StatefulWidget {
   @override
   _RegistrarUsuarioState createState() => _RegistrarUsuarioState();
@@ -34,7 +33,6 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
         password: _passwordController.text,
       );
 
-
       final box = await Hive.openBox('usuarios');
       box.add(persona.toMap());
 
@@ -47,14 +45,15 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text('Registro de Usuario'),
       ),
       body: Padding(
+
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -69,6 +68,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   }
                   return null;
                 },
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -80,6 +80,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   }
                   return null;
                 },
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -91,6 +92,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   }
                   return null;
                 },
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -102,6 +104,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   }
                   return null;
                 },
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -113,6 +116,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   }
                   return null;
                 },
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -124,6 +128,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   }
                   return null;
                 },
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 12.0),
               TextFormField(
@@ -136,6 +141,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                   return null;
                 },
                 obscureText: true,
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 12.0),
               Row(
@@ -149,7 +155,7 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                       });
                     },
                   ),
-                  Text('Masculino'),
+                  Text('Masculino', style: TextStyle(color: Colors.black)),
                   SizedBox(width: 16.0),
                   Checkbox(
                     value: _isFemenino,
@@ -160,25 +166,21 @@ class _RegistrarUsuarioState extends State<RegistrarUsuario> {
                       });
                     },
                   ),
-                  Text('Femenino'),
+                  Text('Femenino', style: TextStyle(color: Colors.black)),
                 ],
               ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: 80.0,
-                  margin: EdgeInsets.all(20.0),
-                  child: ElevatedButton(
-                    onPressed: _registrar,
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(20.0),
-                    ),
-                    child: Text(
-                      'Registrar',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
+              Container(
+                height: 80.0,
+                margin: EdgeInsets.all(20.0),
+                child: ElevatedButton(
+                  onPressed: _registrar,
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black54,
+                    padding: EdgeInsets.all(20.0),
+                  ),
+                  child: Text(
+                    'Registrar',
+                    style: TextStyle(fontSize: 18.0),
                   ),
                 ),
               ),
