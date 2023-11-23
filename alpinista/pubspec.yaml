@@ -31,13 +31,13 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.1.0
   flutter_animator: ^3.1.0
-
+  hive_generator: ^1.1.1
+  path_provider: ^2.0.5
   flare_flutter: ^3.0.0
 
   flutter:
     sdk: flutter
   http: ^0.13.3
-  google_maps_flutter: ^2.0.6
   fl_chart: ^0.40.6
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -66,6 +66,10 @@ flutter:
     - assets/monta1.png
     - assets/monta2.png
     - assets/monta3.png
+    - assets/clima.gif
+    - assets/corazon.gif
+    - assets/montanas.gif
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
